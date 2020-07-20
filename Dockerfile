@@ -25,6 +25,7 @@ RUN PATH=$(pwd)/node_modules/.bin/:$PATH electron-builder --dir --config.asar=fa
 FROM alexisresinio/aarch64-debian-bejs:latest
 # Etcher configuration
 COPY etcher-pro-config.json /usr/src/app/
+COPY zram.sh /usr/src/app/
 
 COPY --from=builder /usr/src/app/dist/linux-arm64-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/app/node_modules/electron/ /usr/src/app/node_modules/electron
@@ -35,4 +36,12 @@ WORKDIR /usr/src/app
 ENV ELECTRON_ENABLE_LOGGING=1
 ENV UDEV=1
 
-CMD cp -n /usr/src/app/etcher-pro-config.json /root/.config/balena-etcher/config.json && xinit
+RUN \
+	apt-get update \
+	&& apt-get install -y kmod \
+	&& rm -rf /var/lib/apt/lists/*
+
+CMD \
+	./zram.sh \
+	&& cp -n /usr/src/app/etcher-pro-config.json /root/.config/balena-etcher/config.json \
+	&& xinit

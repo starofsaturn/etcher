@@ -13,6 +13,7 @@ services:
     network_mode: host
     labels:
       io.balena.features.dbus: 1
+      io.balena.features.kernel-modules: 1
     volumes:
       - 'etcher_pki:/root/.pki'
       - 'etcher_cache:/root/.cache'
