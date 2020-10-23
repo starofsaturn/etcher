@@ -36,11 +36,6 @@ WORKDIR /usr/src/app
 ENV ELECTRON_ENABLE_LOGGING=1
 ENV UDEV=1
 
-RUN \
-	apt-get update \
-	&& apt-get install -y kmod \
-	&& rm -rf /var/lib/apt/lists/*
-
 CMD \
 	./zram.sh \
 	&& cp -n /usr/src/app/etcher-pro-config.json /root/.config/balena-etcher/config.json \
